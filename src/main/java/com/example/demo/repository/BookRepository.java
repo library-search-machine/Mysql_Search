@@ -1,0 +1,23 @@
+package com.example.demo.repository;
+
+
+import com.example.demo.domain.Book;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface BookRepository extends JpaRepository<Book,Long> {
+
+
+
+    @Query(value = "SELECT * FROM book WHERE MATCH(book_name) "
+            + "AGAINST (?1)", nativeQuery = true)
+    List<Book> findByBookNameContaining(String bookname);
+    @Query(value = "SELECT * FROM book WHERE MATCH(authors) "
+            + "AGAINST (?1)", nativeQuery = true)
+    List<Book> findByAuthorsContaining(String authors);
+    List<Book> findByIsbn13Containing(String isbn);
+}
