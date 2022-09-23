@@ -45,7 +45,7 @@
             let find_name =  $("select[name=find_name]").val() // 검색 종류
             let search_name = $("#search_bar").val() // 검색 값
             if(search_name != ''){
-                location.href = "/search?&name="+search_name+"&type="+find_name;
+                location.href = "/search?&keyword="+search_name+"&type="+find_name+"&page="+1;
             }
         }
 
@@ -57,7 +57,7 @@
 <section class="hero is-info">
     <div class="hero-body">
         <p class="title">
-            도서관
+            도서관 데이터 검색
         </p>
     </div>
 </section>
@@ -98,14 +98,6 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>dummy</td>
-                    <td>dummy</td>
-                    <td>dummy</td>
-                    <td>dummy</td>
-
-                </tr>
                 <tr th:each="book : ${bookList}">
                     <td th:text="${book.id}">emil</td>
                     <td th:text="${book.title}">name</td>
@@ -118,6 +110,10 @@
         </div>
     </div>
 </section>
+<div class="text-center m-1" th:if="${totalItems > 0}">
+    <span>Showing results # [[${startCount}]] to [[${endCount}]] of [[${totalItems}]]</span>
+</div>
+
 
 </body>
 
