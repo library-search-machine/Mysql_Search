@@ -42,17 +42,17 @@
 
         //검색해서 그에 맞는 게시글을 보여주는 함수
         function search() {
-            let find_name =  $("select[name=find_name]").val() // 검색 종류
+            let find_name = $("select[name=find_name]").val() // 검색 종류
             let search_name = $("#search_bar").val() // 검색 값
-            if(search_name != ''){
-                location.href = "/search?&keyword="+search_name+"&type="+find_name+"&page="+1;
+            if (search_name != '') {
+                location.href = "/search?keyword=" + search_name + "&type=" + find_name + "&page=" + 1;
             }
         }
 
     </script>
 </head>
 
-<body >
+<body>
 <!--  헤더 부분 -->
 <section class="hero is-info">
     <div class="hero-body">
@@ -86,21 +86,23 @@
 <!--  게시글 카드가 들어가는 공간 -->
 <section class="section">
     <div class="container">
-        <div class = "row">
-            <table class = "table table-striped" style="text-align:center; border:1px solid #dddddd">
+        <div class="row">
+            <table class="table" style="text-align:center; border:1px solid #dddddd">
                 <thead>
                 <tr>
-                    <th style = "background-color:#ffffff; text-align:center;">번호</th>
-                    <th style = "background-color:#ffffff; text-align:center;">제목</th>
-                    <th style = "background-color:#ffffff; text-align:center;">저자</th>
-                    <th style = "background-color:#ffffff; text-align:center;">ISBN</th>
-                    <th style = "background-color:#ffffff; text-align:center;">도서관</th>
+                    <th style="background-color:#ffffff; text-align:center;">번호</th>
+                    <th style="background-color:#ffffff; text-align:center;">제목</th>
+                    <th style="background-color:#ffffff; text-align:center;">저자</th>
+                    <th style="background-color:#ffffff; text-align:center;">ISBN</th>
+                    <th style="background-color:#ffffff; text-align:center;">도서관</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="book : ${bookList}">
                     <td th:text="${book.id}">emil</td>
-                    <td th:text="${book.title}">name</td>
+                    <td><a th:href="@{http://localhost:8080/search_isbn(isbn=${book.isbn})}"
+                           aria-label="Previous"><p th:text="${book.title}"></p></a>
+                    </td>
                     <td th:text="${book.writer}">stat</td>
                     <td th:text="${book.isbn}">super</td>
                     <td th:text="${book.library}">super</td>
@@ -111,6 +113,45 @@
     </div>
 </section>
 <div class="text-center m-1" th:if="${totalItems > 0}">
+    <nav aria-label="Page navigation example ">
+        <ul>
+            <li class="page-item" style="display: inline-block">
+                <a class="page-link"
+                   th:href="@{${#httpServletRequest.requestURI}(keyword=${keyword},type=${type},page=1)}"
+                   aria-label="Previous">
+                    <span aria-hidden="true">처음</span>
+                </a>
+            </li>
+            <li class="page-item" style="display: inline-block" th:if="${current_page -10 > 0}">
+                <a class="page-link"
+                   th:href="@{${#httpServletRequest.requestURI}(keyword=${keyword},type=${type},page=${startIndex}-1)}"
+                   aria-label="Previous">
+                    <span aria-hidden="true">이전</span>
+                </a>
+            </li>
+            <th:block th:with="start = ${startIndex}, end = ${endIndex}">
+                <li class="page-item" style="display: inline-block"
+                    th:with="start = ${startIndex}, end = ${endIndex}"
+                    th:each="pageButton : ${#numbers.sequence(start, end)}">
+                    <a class="page-link" th:href="@{${#httpServletRequest.requestURI}(keyword=${keyword},type=${type},page=${pageButton})}" th:text=${pageButton}></a>
+                </li>
+            </th:block>
+            <li class="page-item" style="display: inline-block"  th:if="${current_page + 10} < ${totalPages}">
+                <a class="page-link"
+                   th:href="@{${#httpServletRequest.requestURI}(keyword=${keyword},type=${type},page=${endIndex}+1)}"
+                   aria-label="Previous">
+                    <span aria-hidden="true">다음</span>
+                </a>
+            </li>
+            <li class="page-item" style="display: inline-block" >
+                <a class="page-link"
+                   th:href="@{${#httpServletRequest.requestURI}(keyword=${keyword},type=${type} ,page=${totalPages})}"
+                   aria-label="Previous">
+                    <span aria-hidden="true">끝</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
     <span>Showing results # [[${startCount}]] to [[${endCount}]] of [[${totalItems}]]</span>
 </div>
 
