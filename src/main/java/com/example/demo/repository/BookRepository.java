@@ -26,5 +26,10 @@ public interface BookRepository extends JpaRepository<Book,Long> {
     Page<Book> findByIsbn13Containing(String isbn, Pageable pageable);
 
 
+    @Query(value = "SELECT library_name FROM book WHERE MATCH(isbn13) "
+            + "AGAINST (?1)", nativeQuery = true)
+    List<String> findByLibraryName(String isbn);
+
+
 
 }
