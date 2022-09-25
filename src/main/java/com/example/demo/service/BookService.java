@@ -81,6 +81,10 @@ public class BookService {
             JSONObject temp = (JSONObject)detail.get(0);
             JSONObject book = (JSONObject)temp.get("book");
 
+            String description = (String)book.get("description");
+            description=description.replaceAll("&gt;","");
+            description=description.replaceAll("&lt;","");
+
 
             BookResponseDto2 bookResponseDto = BookResponseDto2.builder()
                     .bookName((String)book.get("bookname"))
@@ -89,7 +93,7 @@ public class BookService {
                     .class_nm((String)book.get("class_nm"))
                     .publicationYear((String)book.get("publication_year"))
                     .bookImageURL((String)book.get("bookImageURL"))
-                    .description((String)book.get("description"))
+                    .description(description)
                     .LibraryList(LibraryList)
                     .build();
             return  bookResponseDto;
